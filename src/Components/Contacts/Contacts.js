@@ -6,8 +6,8 @@ import {
   deleteContactOperation,
 } from '../../redux/operations/contactsOperations';
 import {
-  getAllContacts,
   getFilterValue,
+  getFilteredItems,
 } from '../../redux/selectors/contacts-selectors';
 import style from './Contacts.module.css';
 
@@ -16,10 +16,8 @@ class Contacts extends Component {
     this.props.reloadPage(this.props.items);
   }
   render() {
-    const { items, deleteContact, filter } = this.props;
-    const filterInpurt = items.filter(el =>
-      el.name.toLowerCase().includes(filter.toLowerCase()),
-    );
+    const { deleteContact, state } = this.props;
+    const filterInpurt = getFilteredItems(state);
     return (
       <ul className={style.list}>
         {filterInpurt.map(el => {
@@ -47,8 +45,8 @@ Contacts.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  items: getAllContacts(state),
   filter: getFilterValue(state),
+  state: state,
 });
 const mapDispatchToProps = dispatch => ({
   deleteContact: id => dispatch(deleteContactOperation(id)),
